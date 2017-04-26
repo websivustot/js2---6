@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Customer's card creation</title>
+    <script src="js/jquery-3.2.1.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <style>
+        .close {
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid customer">
+    </div>
+
+    <script>
+        $(function () {
+            function getBreeds() {
+                $.ajax({
+                        url: 'breeds.json',
+                        method: 'GET',
+                        dataType: 'json',
+                        cache: false
+                    })
+                    .done(function (response) {
+                        $('label[class=breedsLabel]').after($('<select/>', {
+                            name: 'breed',
+                            class: 'form-control breeds'
+                        }));
+                        $.each(response, function (key, value) {
+                            $('.breeds').append($('<option/>', {
+                                value: key,
+                                text: value.breed
+                            }));
+                        })
+                    });
+
+            }
+
+            function showForm() {
+                var customerContainer = $('.customer');
+                var customerForm = $('<form/>');
+
+                customerForm.append(
+                    $('<h1/>', {
+                        text: 'Creating of new customer'
+                    })
+                ).append(
+                    $('<label/>', {
+                        text: 'Pet\'s name '
+                    })
+                ).append(
+                    $('<input/>', {
+                        name: 'name',
+                        value: '',
+                        class: 'form-control'
+                    })
+                ).append(
+                    $('<label/>', {
+                        text: 'Pet\'s breed ',
+                        class: 'breedsLabel'
+                    })
+                );
+                
+                getBreeds();               
+                
+                customerForm.append(
+                    $('<label/>', {
+                        text: 'Age '
+                    })
+                ).append(
+                    $('<input/>', {
+                        name: 'age',
+                        value: '',
+                        class: 'form-control'
+                    })
+                ).append(
+                    $('<label/>', {
+                        text: 'Vaccination '
+                    })
+                ).append(
+                    $('<input/>', {
+                        name: 'vaccination',
+                        type: 'checkbox',
+                        class: 'form-control'
+                    })
+                ).append(
+                    $('<button/>', {
+                        class: 'btn btn-success',
+                        text: 'Create'
+                    }).click(
+                        function (e) {
+                            e.preventDefault();
+                            createCustomer();
+                        }
+                    )
+                );
+
+                customerContainer.append(customerForm);
+            }
+
+            function viewCustomer(id, data) {
+               
+                $('form').css({
+                    display: 'none'
+                });
+                $('.customer').append($('<h1/>', {
+                        text: $('input[name=name]').val()
+                    }))
+                    .append($('<p/>', {
+                        text: $('select option:selected').text()
+                    }))
+                    .append($('<p/>', {
+                        text: $('input[name=age]').val()
+                    }))
+                    .append($('<p/>', {
+                        text: $('input[type=checkbox]').val()
+                    }))
+                    .append($('<button/>', {
+                        text: 'close',
+                        class: 'btn btn-success closePage'
+                    }).click(function () {
+                        document.location.href = 'index.html?' + data;
+                    }))
+                    .append($('<button/>', {
+                        text: 'print',
+                        class: 'btn btn-success printPage'
+                    }).click(function () {
+                        $('.printPage').css({
+                            display: 'none'
+                        });
+                        window.print();
+
+                    }))
+            }
+
+            function createCustomer(id) {
+                var form = $('.customer > form');
+                data = form.serialize();
+
+                $.ajax({
+                    url: 'create.json',
+                    method: 'GET',
+                    data: data,
+                    dataType: 'json',
+                    cache: false
+                }).done(function (customer) {
+                    var breedsArray = $('select[name=breed] option').toArray();
+                        breedsArray = $.each(breedsArray, function (index, value) {
+                            breedsArray[index] = value.innerText;
+                        })
+                    viewCustomer(customer.id, data)
+                })
+            }
+
+            showForm();
+
+        });
+    </script>
+</body>
+
+</html>

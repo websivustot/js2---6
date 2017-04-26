@@ -1,0 +1,30 @@
+[
+    {
+        "id": "1",
+        "breed": "American Pit Bull Terrier"
+    },
+    {
+        "id": "2",
+        "breed": "Borzoi"
+    },
+    {
+        "id": "3",
+        "breed": "Boxer"       
+    },
+    {
+        "id": "4",        
+        "breed": "Chow Chow"
+    },    
+    {
+        "id": "5",        
+        "breed": "Scottish Deerhound"        
+    },    
+    {
+        "id": "6",        
+        "breed": "Dalmatian"
+    },
+    {
+        "id": "7",        
+        "breed": "German Shepherd Dog"
+    }
+]

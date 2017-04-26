@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lesson 6 CRUD</title>
+    <script src="js/jquery-3.2.1.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+</head>
+
+<body>
+    <div class="container customerCatalog"></div>
+    <script>
+        $(function () {
+
+            function getBreeds() {
+                $.ajax({
+                        url: 'breeds.json',
+                        method: 'GET',
+                        dataType: 'json',
+                        cache: false
+                    })
+                    .done(function (response) {
+                        $('.customerCatalog').append($('<select/>', {
+                            name: 'breeds',
+                            class: 'breeds'
+                        }).css({
+                            'display': 'none'
+                        }));
+                        $.each(response, function (key, value) {
+                            $('.breeds').append($('<option/>', {
+                                value: key,
+                                text: value.breed
+                            }));
+                        })
+                    });
+
+            }
+
+            getBreeds();
+
+            function getNewCustomer() {
+                var search = document.location.search;
+                if (search) {
+                    var values = search.slice(1).split('&');
+                    var obj = {};
+                    for (var key in values) {
+                        arr = values[key].split('=');
+                        obj[arr[0]] = arr[1];
+                    }
+
+                    return obj;
+                }
+                return null;
+            }
+
+            function showList() {
+                $.ajax({
+                        url: 'customers.json',
+                        method: 'GET',
+                        dataType: 'json',
+                        cache: false
+                    })
+                    .done(function (response) {
+                        $(".customerCatalog").append($("<h1/>", {
+                            text: "List of customers"
+                        })).append($("<table/>", {
+                            class: "table"
+                        }).append($('<tbody/>').append($('<tr/>').append($('<th/>', {
+                            text: "Name"
+                        })).append($('<th/>', {
+                            text: "Breed"
+                        })).append($('<th/>', {
+                            text: "Age"
+                        })).append($('<th/>', {
+                            text: "Vaccination"
+                        })).append($('<th/>', {
+                            text: "Delete"
+                        })))));
+
+                        var breedsArray = $('select[name=breeds] option').toArray();
+                        breedsArray = $.each(breedsArray, function (index, value) {
+                            breedsArray[index] = value.innerText;
+                        })
+
+                        var newCustomer = getNewCustomer();
+
+                        if (newCustomer != null) {
+                            response.push({
+                                "id": "",
+                                "name": newCustomer.name,
+                                "breed": newCustomer.breed + 1,
+                                "age": newCustomer.age,
+                                "vaccination": newCustomer.vaccination
+                            })
+                        }                        
+                        $.each(response, function (index, value) {
+                            $(".table")
+                                .append($("<tr/>", {
+                                        "data-id": value.id
+                                    })
+                                    .append($("<td/>").append($("<a/>", {
+                                        href: 'edit.html?id=' + value.id,
+                                        text: value.name
+                                    })))
+                                    .append($("<td/>").text(breedsArray[value.breed - 1]))
+                                    .append($("<td/>").text(value.age))
+                                    .append($("<td/>").append(
+                                        $('<i/>', {
+                                            class: 'fa ' +
+                                                (value.vaccination ? 'fa-check' : 'fa-times')
+                                        })
+                                    ))
+                                    .append($("<td/>").append($('<button/>', {
+                                        class: 'btn btn-danger'
+                                    }).append(
+                                        $('<i/>', {
+                                            class: 'fa fa-trash-o'
+                                        })
+                                    ).click(
+                                        function () {
+                                            deleteCustomer($(this).closest('tr').data('id'));
+                                        }
+                                    )))
+                                )
+                        })
+                        $('.table').append($('<button/>', {
+                            text: 'New customer',
+                            class: 'btn btn-success'
+                        }).click(function () {
+                            document.location.href = 'create.html';
+                        }))
+                    })
+                    .fail(function () {
+                        alert("fail!")
+                    });
+            }
+
+            function deleteCustomer(id) {
+                $.ajax({
+                    url: 'delete.json',
+                    method: 'GET',
+                    data: {
+                        id: id
+                    },
+                    dataType: 'json',
+                    cache: false
+                }).done(function () {
+                    $('tr[data-id="' + id + '"]').remove();
+                })
+            }
+
+            showList();
+
+        });
+    </script>
+</body>
+
+</html>

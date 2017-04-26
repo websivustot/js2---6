@@ -1,0 +1,72 @@
+[
+    {
+        "id": "1",
+        "name": "Rex",
+        "breed": "1",
+        "age": "5",
+        "vaccination": true
+    },
+    {
+        "id": "2",
+        "name": "Jeck",
+        "breed": "2",
+        "age": "1",
+        "vaccination": true
+    },
+    {
+        "id": "3",
+        "name": "Jim",
+        "breed": "3",
+        "age": "2",
+        "vaccination": false
+    },
+    {
+        "id": "4",
+        "name": "Max",
+        "breed": "4",
+        "age": "3",
+        "vaccination": true
+    },
+    {
+        "id": "5",
+        "name": "Mike",
+        "breed": "1",
+        "age": "4",
+        "vaccination": false
+    },
+    {
+        "id": "6",
+        "name": "Toby",
+        "breed": "5",
+        "age": "7",
+        "vaccination": false
+    },
+    {
+        "id": "7",
+       "name": "Lucy",
+        "breed": "3",
+        "age": "5",
+        "vaccination": true
+    },
+    {
+        "id": "8",
+        "name": "Jim",
+        "breed": "4",
+        "age": "8",
+        "vaccination": true
+    },
+    {
+        "id": "9",
+        "name": "Max",
+        "breed": "6",
+        "age": "1",
+        "vaccination": true
+    },
+    {
+        "id": "10",
+        "name": "Buddy",
+        "breed": "7",
+        "age": "2",
+        "vaccination": true
+    }
+]

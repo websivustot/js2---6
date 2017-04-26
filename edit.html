@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lesson 6 Editing</title>
+    <script src="js/jquery-3.2.1.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+</head>
+
+<body>
+    <div class="container-fluid customer">
+    </div>
+    <script>
+        $(function () {
+            var customerId = getQueryParam('id');
+
+            function getQueryParam(param) {
+                var search = document.location.search;
+                var values = search.slice(1).split('&').filter(
+                    function (item) {
+                        return item.split('=')[0] === param;
+                    }
+                );
+
+                return values.pop().split('=').pop();
+            }
+
+            function showCustomer(customerId) {
+                $.ajax({
+                    url: customerId + '.json',
+                    method: 'GET',
+                    data: {
+                        id: customerId
+                    },
+                    dataType: 'json',
+                    cache: false
+                }).done(function (customer) {
+                    var customerContainer = $('.customer');
+                    var customerForm = $('<form/>');                    
+                    customerForm.append(
+                        $('<h1/>', {
+                            text: 'Editing'
+                        })
+                    ).append(
+                        $('<label/>', {
+                            text: 'Pet\'s name '
+                        })
+                    ).append(
+                        $('<input/>', {
+                            name: 'name',
+                            value: customer.name,
+                            class: 'form-control'
+                        })
+                    ).append(
+                        $('<label/>', {
+                            text: 'Vaccination '
+                        })
+                    ).append(
+                        $('<input/>', {
+                            name: 'vaccination',
+                            type: 'checkbox',
+                            value: customer.vaccination,
+                            class: 'form-control'
+                        })
+                    ).append(
+                        $('<button/>', {
+                            class: 'btn btn-success',
+                            text: 'Save',
+                            'data-id': customer.id
+                        }).click(
+                            function (e) {
+                                e.preventDefault();
+                                saveCustomer($(this).data('id'))
+                            }
+                        )
+                    );
+
+                    customerContainer.append(customerForm);
+                })
+            }
+
+            function saveCustomer(id) {
+                var form = $('.customer > form');
+                var data = form.serialize();
+                data = data + '&id=' + id;
+
+                $.ajax({
+                    url: 'edit.json',
+                    method: 'GET',
+                    data: data,
+                    dataType: 'json',
+                    cache: false
+                }).done(function () {
+                    document.location.href = 'index.html';
+                })
+            }
+
+            showCustomer(customerId)
+
+        });
+    </script>
+</body>
+
+</html>
